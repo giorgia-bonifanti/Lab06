@@ -28,4 +28,53 @@ class Controller:
         self._view.update()
 
     # Altre Funzioni Event Handler
-    # TODO
+    def handle_mostra_strumenti(self):
+        lista_strum=self._model.get_strumenti()
+        self._view.lista_strumenti.controls.clear()
+
+        if lista_strum is None:
+            self._view.show_alert("Errore di connessione al database!")
+        elif len(lista_strum) == 0:
+            self._view.lista_strumenti.controls.append(ft.Text("Nessun strumento presente nel deposito."))
+        else:
+            for s in lista_strum:
+                self._view.lista_strumenti.controls.append(ft.Text(str(s)))
+
+        self._view.update()
+
+    def handle_cerca_tipo(self, e):
+        tipo_cercato = self._view.input_tipo_strumento.value.strip()
+
+        if tipo_cercato == "":  #ha premuto cerca, ma la barra è vuota:
+            self._view.show_alert("Inserisci un tipo di strumento per cercare!")
+            return
+
+        #cerca nel database:
+        lista_trovati = self._model.cerca_strumenti_per_tipo(tipo_cercato)
+        self._view.lista_strumenti_ricerca.controls.clear()
+
+        #gestione dei risultati:
+        if lista_trovati is None:
+            self._view.show_alert("Errore di connessione al database!")
+        elif len(lista_trovati) == 0:
+            self._view.lista_strumenti_ricerca.controls.append(ft.Text(f"Nessun strumento di tipo '{tipo_cercato}' trovato."))
+        else:
+            for s in lista_trovati:
+                self._view.lista_strumenti_ricerca.controls.append(ft.Text(str(s)))
+
+        #aggionarno la UI:
+        self._view.upodate()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
